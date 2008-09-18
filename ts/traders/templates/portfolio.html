@@ -1,0 +1,26 @@
+{% extends "accounthome.html" %}
+{% load currency %}
+{% load transactiondescription %}
+{% block title %} - Portfolio{% endblock %}
+{% block javascript %}
+{% endblock %}
+{% block text %}
+  <div class="form" style="width: 550px;"><fieldset>
+     <legend>Portfolio</legend><table width="100%">
+	 <thead>
+	 <tr><td>Url</td><td>Keyword</td><td>Money</td><td>Edit</td></tr></thead><tbody>
+
+{% for portfolio in user.portfolio %}
+	      <tr class="smalltext">
+	        <td align="left"><a href="{{ portfolio.url.url }}" target=_blank>{{ portfolio.url.title }}</a></td>
+	        <td align="left"><a href="{{ portfolio.keyword.tag|tallstreetlink }}" target=_blank>{{ portfolio.keyword.tag }}</a></td>
+	        <td align="left">{{ portfolio.money|currency }}</td>
+	        <td align="left"><a href="{{ portfolio.url.url|tallstreetinvestlink }}">Edit</a></td>
+	      </tr>
+{% endfor %}
+       </tbody>
+     </table> 
+ </fieldset>
+
+  </div>              
+{% endblock %}

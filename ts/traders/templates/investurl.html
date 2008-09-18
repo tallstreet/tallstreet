@@ -1,0 +1,31 @@
+{% extends "accounthome.html" %}
+{% load currency %}
+{% block title %} - Invest in URL{% endblock %}
+{% block javascript %}
+{% endblock %}
+{% block text %}
+  <center><div class="form" style="width: 500px;"><fieldset>
+     <legend>Invest in URL</legend>
+	<div align="right">Balance: <span class="moneyli">¢{{ user.money_outstanding|currency }}</span>Net Worth: <span class="moneyli">¢{{ user.money|currency }}</span></div>
+
+	 <form name="add" method="get" action="/invest"><fieldset>
+    <table>
+      <tr>
+        <td colspan="2" align="center">&nbsp;</td>
+      </tr>
+      <tr>      
+      	<td align="right" width="20%">URL:</td>
+      	<td align="left" width="80%"><input name="url" type="text" id="url" size="40"></td>
+      </tr>	            
+      <tr>
+
+        <td colspan=2 align="center">
+	            <input name="Add" type="submit" id="Add" value="Add"></td>
+      </tr>
+    </table>
+   </form>
+	</fieldset>
+
+  </div> 
+  </center> 
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "standardpage.html" %}
+{% load currency %}
+{% block title %} - Invest in URL{% endblock %}
+{% block javascript %}
+{% endblock %}
+{% block text %}
+  <center>
+  <div id="title" style="width: 600px">
+  <div class="greencenter"><div class="greenleft"><div class="greenright">
+  Invest in...
+  </div></div></div>
+  </div>
+  <div id="greenbox" style="width: 598px" align="left">
+  
+  <h2>{{ referrer.title }}</h2>
+  
+  <p style="margin: 20px; float: right;"><a href="/invest/{{ referrer.url|urlencode }}"><img src="/images/InvestNow.gif"></a></p>
+  <p>{{ referrer.description }}</p>
+  <p class="link">{{ referrer.url }}</p>
+  
+  <p id="TagCloud">
+  	 {{ referrer.related_tags }}
+  </p>
+  </div> 
+  <p><a href="/introduction.html">First Time Visitors</a> - <a href="/privacy.html">Privacy Policy</a> - <a href="/contactus.html">Contact Us</a></p>
+
+  </center>       
+{% endblock %}

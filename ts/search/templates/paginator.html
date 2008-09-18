@@ -1,0 +1,11 @@
+<div class="pages">
+    {% if has_previous %}{% ifnotequal previous 1 %}<a href="{{paginator_param}}page{{ previous }}">{% else %}<a href="{{paginator_param}}">{% endifnotequal %}&laquo; previous</a>
+    {% endif %}
+    {% for page_number in page_numbers %}
+    {% ifnotequal page page_number %}{% ifnotequal page_number 1 %}<a href="{{paginator_param}}page{{ page_number }}">{% else %}<a href="{{paginator_param}}">{% endifnotequal %}{{page_number}}</a>
+    {% else %}<span class="current">{{page_number}}</span>
+    {% endifnotequal %}
+    {% endfor %}
+    {% if has_next %}<a href="{{paginator_param}}page{{ next }}">next &raquo;</a>
+    {% endif %}
+</div>

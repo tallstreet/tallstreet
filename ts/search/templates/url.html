@@ -1,0 +1,43 @@
+{% extends "standardpage.html" %}
+{% block title %} - {{ title }}{% endblock %}
+{% block text %}
+<h2> {{ url.title }}</h2>
+<p><form name='invest' method='get' action='/invest'>
+<input name='url' type='hidden' value='{{ url.url }}'>
+<input type='image' src='/images/InvestNow.gif' border='0' alt='Invest' title=' Invest '></form>
+<p>{{ url.description }}</p>
+<p class="link"><a href='{{ url.url }}'>{{ url.url }}</a></p>
+
+
+ <p>
+  <div id="title" style="width: 450px">
+  <div class="greencenter"><div class="greenleft"><div class="greenright">
+  Keywords
+  </div></div></div>
+  </div>
+  <div id="greenbox" style="width: 448px" align="left">
+  <table class="badges"><thead><tr><td width="300px"><b>Keyword</b></td><td width="100px"><b>Investment</b></td></tr></thead>
+  <tbody>
+{% for keyword in url.related_keywords %}
+<tr><td><a href='/view/{{ keyword.tag.tag }}'>{{ keyword.tag.tag }}</a></td><td>¢{{ keyword.money }}</td></tr>
+{% endfor %}
+  </tbody>
+</table></div></p>
+
+{% if otherurls %}
+ <p>
+<div id="title" style="width: 450px">
+<div class="greencenter"><div class="greenleft"><div class="greenright">
+Other pages from this site
+</div></div></div>
+</div>
+<div id="greenbox" style="width: 448px" align="left">
+<table class="badges"><thead><tr><td width="300px"><b>Page</b></td></tr></thead>
+  <tbody>
+{% for otherurl in otherurls %}
+<tr><td><a href='/url/{{ otherurl.url|urlencode }}'>{{ otherurl.title }}</a></td></tr>
+{% endfor %}	
+  </tbody>
+</table></div></p>
+{% endif %}
+{% endblock %}

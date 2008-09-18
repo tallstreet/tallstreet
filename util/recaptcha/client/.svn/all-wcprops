@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/131/trunk/cpedialog/recaptcha/client
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/130/trunk/cpedialog/recaptcha/client/__init__.py
+END
+captcha.py
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/131/trunk/cpedialog/recaptcha/client/captcha.py
+END

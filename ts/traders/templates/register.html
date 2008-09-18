@@ -1,0 +1,25 @@
+{% extends "standardpage.html" %}
+{% block javascript %}
+{% endblock %}
+{% block text %}
+  <form name="validate" method="post" action="validate.do">
+  <input type="hidden" name="command" value="">
+  <input type="hidden" name="data" value="">
+  </form>
+
+  <form name="register" method="post" action="register.do{% if next %}?next={{ next }}{% endif %}" class="form" style="width: 500px;">
+          <fieldset>
+	  <legend>Register <span>(All fields required)</span></legend>
+ 	{{ form.as_p }}
+	<center>
+	{%if captchaerror%}<p class="errorlist">The characters you entered didn't match the image</p>{%endif%}
+      	{{captchahtml|safe}}
+	</center>
+	  </fieldset>
+      {%if tocerror%}<p class="errorlist">You must agree to your terms and conditions</p>{%endif%}
+      Do you agree to our <a href="terms.html" target="_blank" id="terms">terms and conditions</a>? <input type="checkbox" name="toc">
+
+	  <p align="center"><input type="hidden" name="next" value="{{ next }}"><input type="submit" name="submit" value="Submit"></p>
+  </form>               
+  
+{% endblock %}

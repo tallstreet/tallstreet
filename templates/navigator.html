@@ -1,0 +1,9 @@
+{% if user.is_authenticated %}
+<a class="account icon" href="https://www.google.com/accounts/ManageAccount" target="_blank">{{ user.username }}</a> 
+	{% if is_admin %}
+		| <a class="post_add icon" href="/post/add/">添加新文章</a> | <a class="category_add icon" href="/category/add/">添加新类别</a> |
+	{% endif %}
+<a class="logout icon" href="/logout/">退出</a>
+{% else %}
+<a class="login icon" href="/login/">用Google帐号登录</a>
+{% endif %}

@@ -1,0 +1,107 @@
+{% extends "accounthome.html" %}
+{% load currency %}
+{% block title %} - Invest in {{ title }}{% endblock %}
+{% block javascript %}
+<script type="text/javascript" src="/media/js/AJAX.js"></script>
+<script type="text/javascript" src="/media/js/add.js"></script>
+{% endblock %}
+{% block text %}
+	    <form name="invest" method="post" action="" class="form"  style="width: 500px;"><fieldset>
+
+		<legend>Invest In {{ title|truncatewords:3 }}</legend>
+	    <table width="100%">
+{%if new %}
+	      <tr>
+	        <td align="right">URL:</td>
+	        <td align="left">{{ url|urlizetrunc:50 }}</td>
+	      </tr>
+	      <tr>
+	        <td align="right">Site Name:</td>
+	        <td align="left"><input type="text" maxsize="64" size="40" name="sitename" value="{{ title }}"></td>
+	      </tr>
+	      <tr>
+	        <td align="right">Description:</td>
+	        <td align="left"><input type="text" maxsize="512" size="40" name="description" value="{{ description }}"></td>
+	      </tr>
+{% else %}
+	      <tr>
+	        <td align="right">URL:</td>
+	        <td align="left">{{ url|urlizetrunc:50 }}</td>
+	      </tr>
+	      <tr>
+
+	        <td align="right">Site Name:</td>
+	        <td align="left">{{ title }}</td>
+	      </tr>
+	      <tr>
+	        <td align="right">Description:</td>
+	        <td align="left">{{ description }}</td>
+	      </tr>
+{% endif %}
+
+	    </table>
+		</fieldset>             
+	
+
+		<fieldset>
+		<legend>Keywords</legend>
+		<SCRIPT LANGUAGE="JavaScript">
+		<!-- Begin
+		  var i = {{ keywords|length }} - 1
+		//  End -->
+		</script>
+
+	    <table width="100%" id="keywords">
+	      
+   <tr>
+     <td colspan=3 align="center" class="errorlist"  id="error">{{ error }}</td>
+
+   </tr>
+
+	      <tr>
+	        <td colspan=3 align="right">Balance: <span class="moneyli" id="balance">¢{{ user.money_outstanding|currency }}</span>Net Worth: <span class="moneyli">¢{{ user.money|currency }}</span></td>
+	      </tr>
+	      <tr>
+	        <td align="right" width=100px>Investment</td>
+
+	        <td align="left" width=200px>Keyword</td>
+			<td align="left" width=200px>&nbsp;</td>
+	      </tr>
+		  <tbody>
+{% for keyword in keywords %}
+	      <tr  id="row{{ forloop.counter0 }}"{% ifequal errorrow forloop.counter0 %} class="highlight"{% endifequal %}>
+	        <td align="right"><input type="text" size="10" name="investment[{{ forloop.counter0 }}]" value="{{ keyword.amount }}" onkeyup="update_balance();"></td>
+		<input type="hidden" name="edit[{{ forloop.counter0 }}]" value="{{ keyword.edit }}">
+{%if keyword.edit %}
+	        <td align="left"><input type="text" size="32" maxlength="32" name="keyword[{{ forloop.counter0 }}]" value="{{ keyword.keyword }}" onkeyup="update_keyword({{ forloop.counter0 }});"></td>
+		<td align="left" id="keywordlink{{ forloop.counter0 }}">&nbsp;</td>
+{% else %}
+ 		<td align="left">{{ keyword.keyword }}<input type="hidden" name="keyword[{{ forloop.counter0 }}]" value="{{ keyword.keyword }}"></td>
+		<td align="left"><a href="/view/{{ keyword.keyword }}" target=_blank>{{ keyword.keyword }}</a></td>
+{% endif %}
+	      </tr>
+{% endfor %}
+
+
+		</tbody>
+
+		<tr align="right"><td colspan="3"><fieldset><legend>More Keywords</legend><noscript><input type="submit" name="addblank" value="New Keyword"></noscript><p id="TagCloud" style="max-width: 420px">
+
+		<SCRIPT LANGUAGE="JavaScript">
+		<!-- Begin
+		  var base_balance = {{ base_balance }};
+		  var this_investment = {{ this_investment }};
+		  var total_balance = {{ user.money_outstanding }};
+		  var keywords = new Array();
+{% for keyword, size in tags.items %}
+ keywords['{{ keyword }}'] = '\n &nbsp;<a href="javascript:addRow(\'{{ keyword }}\')" style="font-size: {{ size }}px;">{{ keyword }}</a>&nbsp; ';
+{% endfor %}
+		print_keywords();
+		//  End -->
+		</script></p></fieldset></td></tr>
+	    </table>
+		</fieldset>
+	    <p align="center"><input type="hidden" name="url" value="{{ url }}"><input type="submit" name="submit" value="Submit"></p>
+	  </form>
+	 </div>  
+{% endblock %}

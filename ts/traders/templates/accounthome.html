@@ -1,0 +1,14 @@
+{% extends "accountpage.html" %}
+{% load currency %}
+{% block text %}
+	  <h2>Welcome {{ user.username }}</h2>
+      <p>You have ¢{{ user.money_outstanding|currency }} in your account.</p>
+      <p>You can <a href="/invest">invest</a> this in any site, which will raise that sites ranking. </p>
+
+      <p>You can view your <a href="/portfolio">portfolio</a> to see your current investments. </p>
+      <p>Own a website? Found a cool new site? <a href="/invest">Add a link</a> to our directory.</p>
+      <p>If you own the site be sure to <a href="/account/buildlink.html">add a badge</a> to improve its ranking.</p>
+
+      <p> </p>
+
+{% endblock %}

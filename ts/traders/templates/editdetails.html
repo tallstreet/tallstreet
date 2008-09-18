@@ -1,0 +1,13 @@
+{% extends "accounthome.html" %}
+{% block title %} - Edit Details{% endblock %}
+{% block javascript %}
+{% endblock %}
+{% block text %}
+  <form name="editdetails" method="post" action="/account/editdetails.html" class="form" style="width: 500px;">
+          <fieldset>
+	  <legend>Edit Details</legend>
+	{{ form.as_p }}
+	{%if incorrectpassword%}<p class="errorlist">Your password is incorrect</p>{%endif%}
+	  <p align="center"><input type="submit" name="submit" value="Submit"></p>
+  </form>
+{% endblock %}

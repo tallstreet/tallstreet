@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>Update</title>
+	<script src="/js/jquery.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			update();
+		})
+		function update() {
+			$("#updateStatus").append( "<br>Clearing" );
+
+			$.ajax({
+			url: '/clear',
+			type: 'GET',
+			dataType: 'text',
+			timeout: 10000,
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				if (textStatus == "timeout"){
+					update();
+				} else {
+					$("#updateStatus").append( "<br>" + textStatus );
+				}
+			},
+			success: function(xml){
+				// do something with xml
+				$("#updateStatus").append( "<br>Success" );
+			}
+			});
+		}
+	</script>
+
+    
+</head> 
+
+<body>	
+<div id="updateStatus">	
+</div>
+
+</body>
+</html>

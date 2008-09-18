@@ -1,0 +1,40 @@
+application: ts
+version: 3
+runtime: python
+api_version: 1
+default_expiration: "90d"
+
+
+handlers:
+- url: /media
+  static_dir: media
+
+- url: /js
+  static_dir: media/js
+
+- url: /images
+  static_dir: media/images
+
+- url: /img
+  static_dir: media/images
+
+- url: /html
+  static_dir: media/html
+
+- url: /static
+  static_dir: media/static
+
+- url: /favicon.ico
+  static_files: media/static/favicon.ico
+  upload: media/static/favicon.ico
+
+- url: /robots.txt
+  static_files: media/static/robots.txt
+  upload: media/static/robots.txt
+
+- url: /load
+  script: load/loader.py
+  login: admin
+
+- url: /.*
+  script: common/appenginepatch/main.py

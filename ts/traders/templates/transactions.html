@@ -1,0 +1,26 @@
+{% extends "accounthome.html" %}
+{% load currency %}
+{% load transactiondescription %}
+{% block title %} - Transactions{% endblock %}
+{% block javascript %}
+{% endblock %}
+{% block text %}
+  <div class="form" style="width: 550px;"><fieldset>
+     <legend>Transactions</legend><table width="100%">
+	 <thead>
+	 <tr><td>Date</td><td>Description</td><td>Amount</td><td>Balance</td></tr></thead><tbody>
+
+{% for transaction in user.transactions %}
+	      <tr class="smalltext">
+	        <td align="left">{{ transaction.time|date:"d M Y" }}</td>
+	        <td align="left">{{ transaction.description|transactiondescription|safe }}</td>
+	        <td align="left">{{ transaction.change|currency }}</td>
+	        <td align="left">{{ transaction.account_balance_outstanding|currency }}</td>
+	      </tr>
+{% endfor %}
+       </tbody>
+     </table> 
+ </fieldset>
+
+  </div>              
+{% endblock %}

@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Tall Street{% block title %}{% endblock %}</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">{% block meta %}{% endblock %}
+{% block javascript %}{% endblock %}
+<link href="/media/css/style.css" rel="stylesheet" type="text/css">
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-842424-1";
+urchinTracker();
+</script>
+</head>
+
+<body>
+<div id="container">
+  <div id="header">
+  <div class="hdcenter"><div class="hdleft"><div class="hdright">
+  <table width="100%" id="header">
+    <tr height=12px>
+      <td colspan="5"></td>
+    </tr>  
+    <tr>
+      <td width="150"><a href="/"><img src="/images/tallstreet-logo-small.gif" width="100" height="50" border="0"></a></td>
+      <td width="120" align="right"><form name="search" method="get" action="/search.do">View the best </td>
+      <td width="150" align="center"><input name="query" type="text" id="query" size="30" value="{{ re_search }}"></td>
+      <td width="100"><input type="image" src="/images/searchbutton.gif" border="0" alt="Search" title=" Search "></form></td>    
+      <td align="right" valign="top">{% if user.is_authenticated %}<a href="/account/">Account Home</a> - <a href="/portfolio/{{ query }}">Portfolio</a>{% else %}<a href="/login.html">Sign In / Sign Up </a>{% endif %}</td>
+    </tr>
+    <tr align="right">
+      <td colspan="5">{{ search_text }}&nbsp; </td>
+    </tr>
+  </table>
+  </div></div></div>
+  </div>
+  <div id="contents">
+{% block content %}{% endblock %}
+  </div>
+  <div id="footer">
+  <p><span class="copyright">&copy;2008 Tall Street </span></p>
+  </div>
+</div>
+</body>
+</html>

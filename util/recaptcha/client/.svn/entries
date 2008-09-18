@@ -1,0 +1,52 @@
+8
+
+dir
+272
+http://cpedialog.googlecode.com/svn/trunk/cpedialog/recaptcha/client
+http://cpedialog.googlecode.com/svn
+
+
+
+2008-08-11T06:04:10.899679Z
+131
+cpedia
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+a1bfd6c9-7850-0410-82cb-e7152bfa5976
+
+__init__.py
+file
+
+
+
+
+2008-08-30T23:15:07.000000Z
+d41d8cd98f00b204e9800998ecf8427e
+2008-08-10T12:54:07.460849Z
+130
+cpedia
+
+captcha.py
+file
+
+
+
+
+2008-08-30T23:15:07.000000Z
+378966d701c5d72f14af6f70446e3173
+2008-08-11T06:04:10.899679Z
+131
+cpedia
+

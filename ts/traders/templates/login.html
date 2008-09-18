@@ -1,0 +1,62 @@
+{% extends "standardpage.html" %}
+{% block title %} - Login{% endblock %}
+{% block text %}
+  <form name="login" method="post" action="login.html" class="login-form"><fieldset>
+    <legend>Already a member? <span>(Sign In)</span></legend>
+	<table border=0>
+	{% if form.errors %}
+    <tr>
+      <td colspan=2 class="errorlist">Your username and password didn't match. Please try again.</td>
+    </tr>
+{% endif %}
+
+    <tr>
+      <td align="right">{{ form.username.label_tag }}</td>
+	  <td align="left">{{ form.username }}</td>
+    </tr>
+
+    <tr>
+      <td align="right">{{ form.password.label_tag }}</td>
+	  <td align="left">{{ form.password }}</td>
+    </tr>
+    <tr>
+
+      <td colspan=2 align="center"><input type="hidden" name="next" value="{{ next }}"><input type="submit" name="login" value="Submit"></td>
+    </tr>
+    <tr>
+      <td colspan=2 align="center"><a href=passwordforgotten.html>Forgotten your password?</a></td>
+    </tr>
+	</table>
+  </fieldset>
+  </form>
+
+  <table border="0" cellpadding="10">
+    <tr>
+      <td><h2>Become a Tall Street member</h2>
+          <p>Tall Street is a Web Directory where <B>you</B> control the results.
+			For a more detailed description how our site works see our <a href="introduction.html">introduction. </a></p>
+          <p>Membership entitles you to become a trader where you trade our Web Directory
+			like a stock market. This allows you to:</p>
+
+          <ul>
+            <li><strong>Add a site</strong> you own or like into our directory.</li>
+            <li><strong>Increase the rankings</strong> of sites in our directory
+              by investing fictional money in the site.</li>
+            <li>By investing in good sites that other people use and rate as
+              good you will earn fictional money, allowing you to
+              further increase the ranking of any sites you choose.</li>
+            <li>Investing in bad and underperforming sites will
+              cause you to lose fictional money.</li>
+
+          </ul>
+          <p>Trading is <strong>easy</strong> and <strong>fun</strong>. Membership
+            is <strong>instant</strong> and <strong>free</strong>. </p>          </td>
+    </tr>
+
+    <tr>
+      <td><div align="center"><h3><a href="register.html{% if next %}?next={{ next }}{% endif %}">Proceed to Sign
+              Up &gt; </a></h3></div></td>
+    </tr>
+  </table>               
+
+{% endblock %}
