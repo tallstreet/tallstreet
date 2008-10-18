@@ -164,6 +164,7 @@ def invest(request, url, new_keyword = ""):
 			payload["base_balance"] -= investment
 			payload["this_investment"] += investment
 			keyword = keyword.replace("_", " ")
+			keyword = keyword.strip()
 			if keyword == "" and investment > 0:
 				payload["error"] = "You must enter a keyword"
 				payload["errorrow"] = i
@@ -289,6 +290,40 @@ def update_portfolio(user, keyword, url, investment, ip):
 	
 	user.put()
 	return change
+	
+	
+@transaction
+def update_portfolio_gain(user, url, keyword, gain):
+	portfolio = TallstreetPortfolio.get_invested(user, url, keyword)
+	change = long(round(portfolio.money * (1.0 * gain / 100)))
+
+	if change == 0:
+		return 0	
+	portfolio.money = portfolio.money + change
+		
+	user.money += change
+	if portfolio.money <= 0:
+		portfolio.delete()
+		portfolio = None
+	else:
+		portfolio.put()
+	transaction = TallstreetTransaction(parent=user, change=change, new_amount=portfolio.money, account_balance=user.money, account_balance_outstanding=user.money_outstanding, portfolio=portfolio, user=user)
+	if change > 0:
+		transaction.description = "Gained in [%s] under %s" % (url.key().id_or_name(), keyword.tag)
+	else:
+		transaction.description = "Lost in [%s] under %s" % (url.key().id_or_name(), keyword.tag)
+	transaction.put()
+	
+	user.put()
+	return change	
+	
+@transaction
+def update_new_money(user):
+	if user.money_outstanding < 1000:
+		user.money += 100
+		user.money_outstanding += 100
+	
+	user.put()
 
 def invest_url(request):
 	payload = {}

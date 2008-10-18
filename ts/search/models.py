@@ -21,9 +21,7 @@ class TallstreetUrls(db.Expando):
 	
 	@classmethod
 	def get_url(self, url):
-		query = db.Query(TallstreetUrls)
-		query.filter('url =', url)
-		return query.get()
+		return TallstreetUrls.get_by_key_name("url%s" % url)
   
 class TallstreetTags(db.Model):
 	tag = db.CategoryProperty()
@@ -66,6 +64,15 @@ class TallstreetHistory(db.Model):
 	universe = db.ReferenceProperty(TallstreetUniverse, collection_name='history') 
 	dates = db.ListProperty(datetime.datetime)
 	changes = db.ListProperty(int)
+	
+class TallstreetHistoryChanges(db.Model):
+	ips = db.ListProperty(str)	
+	
+	@classmethod
+	def get_all(self):
+		query = db.Query(TallstreetHistoryChanges)
+		return query.fetch(100)
+			
 	  
 class TallstreetClick(db.Model):
 	type = db.CategoryProperty()
@@ -74,3 +81,12 @@ class TallstreetClick(db.Model):
 	rating = db.RatingProperty()
 	url = db.LinkProperty()
 	time = db.DateTimeProperty(auto_now_add=True)
+	
+
+	@classmethod
+	def get_all(self):
+		query = db.Query(TallstreetClick)
+		query.order("url")
+		query.order("keyword")
+		query.order("time")
+		return query.fetch(100)

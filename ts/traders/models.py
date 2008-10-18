@@ -11,6 +11,13 @@ class TallstreetPortfolio(db.Model):
 	url = db.ReferenceProperty(TallstreetUrls, collection_name='related_users')
 	keyword = db.ReferenceProperty(TallstreetTags, collection_name='related_users')
 	money = db.IntegerProperty()
+	
+	@classmethod
+	def get_investors(self, url, tag):	
+		query = db.Query(TallstreetPortfolio)
+		query.filter('url =', url)
+		query.filter('keyword =', tag)
+		return query.fetch(1000)		
 
 	@classmethod
 	def get_invested(self, user, url, tag):	
@@ -37,3 +44,11 @@ class TallstreetTransaction(db.Model):
 	time = db.DateTimeProperty(auto_now_add=True)	
 	description = db.StringProperty()
 	ip = db.StringProperty()
+	
+	@classmethod
+	def get_transactions(self, user):	
+		query = db.Query(TallstreetTransaction)
+		query.ancestor(user)
+		query.filter('url =', url)
+		return query.fetch(50)	
+		

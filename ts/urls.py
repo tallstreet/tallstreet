@@ -1,8 +1,10 @@
 from django.conf.urls.defaults import *
-from ts.search.feeds import ResultsFeed
+from ts.search.feeds import ResultsFeed, HistoryCalcFeed, PortfolioCalcFeed
 
 feeds = {
-    'results': ResultsFeed
+    'results': ResultsFeed,
+    'calchistory': HistoryCalcFeed,
+    'calcportfolio': PortfolioCalcFeed
 }
 
 
