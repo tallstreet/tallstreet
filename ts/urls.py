@@ -33,6 +33,8 @@ urlpatterns = patterns('',
     (r'^invest/(.+)$', 'ts.traders.views.invest'),
     (r'^add/(.+)/?$', 'ts.traders.views.invest_add_url'),
     (r'^portfolio/?(.*)$', 'ts.traders.views.portfolio'),
+    (r'^connect$', 'ts.traders.views.connect_users'),
+    (r'^send_connect$', 'ts.traders.views.send_connect_users'),
 		    
     (r'^(register.html)$', 'ts.traders.views.register'),
     (r'^(register.do)$', 'ts.traders.views.register'),

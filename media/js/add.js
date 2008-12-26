@@ -32,7 +32,9 @@ function print_keywords(){
 	var dstDiv = document.getElementById('TagCloud');
 	dstDiv.innerHTML = '';
 	for (tag in keywords) {
-		dstDiv.innerHTML += keywords[tag];
+		if (typeof keywords[tag] != 'function'){
+			dstDiv.innerHTML += keywords[tag];
+		}
 	}	
 	dstDiv.innerHTML += ' &nbsp;<a href="javascript:addRow(\'\')" style="font-size: 10px; color: blue;">New Keyword</a>&nbsp;';
 }
@@ -53,7 +55,10 @@ function formatCurrency(num) {
 	return (((sign)?'':'-') + String.fromCharCode(162) + num);
 }
 
-function update_balance(){
+function update_balance(num){
+
+	keyword = document.invest.elements['keyword[' + num + ']'].value;
+	money = document.invest.elements['investment[' + num + ']'].value;
 	var errorDiv = document.getElementById('error');
 	errorDiv.innerHTML = "";
 	
@@ -90,7 +95,7 @@ function update_balance(){
 
 function update_keyword(num){
 
-	var keyword = document.invest.elements['keyword[' + num + ']'].value;
+	keyword = document.invest.elements['keyword[' + num + ']'].value;
 	if (keyword == ""){
 		return;
 	}

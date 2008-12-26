@@ -11,6 +11,8 @@ class User(EmailUser):
 	money = db.IntegerProperty(default=50)
 	money_outstanding = db.IntegerProperty(default=50)
 	username = db.StringProperty(required=True)
+	facebook_id = db.IntegerProperty()
+	email_hash = db.StringProperty()
 	
 	@classmethod
 	def need_new_money(self):

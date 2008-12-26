@@ -13,10 +13,11 @@ from util.recaptcha.client import captcha
 import logging
 
 from django.contrib.auth.decorators import login_required
+from ragendja.auth.decorators import staff_only
 from ragendja.dbutils import transaction
 
 from ts.search.models import TallstreetUrls, TallstreetUniverse, TallstreetTags
-from ts.traders.models import TallstreetPortfolio, TallstreetTransaction
+from ts.traders.models import TallstreetPortfolio, TallstreetTransaction, Log
 from google.appengine.ext import db
 
 from google.appengine.api.urlfetch import fetch
@@ -24,6 +25,10 @@ import re
 from util.BeautifulSoup import BeautifulSoup
 
 import urlparse
+
+
+from connect.FacebookConnectMiddleware import FacebookConnectMiddleware
+from connect.pyfacebook import Facebook
 
 class UserField(forms.CharField):
 	def clean(self, value):
@@ -66,7 +71,11 @@ class EditDetailsForm(forms.Form):
 
 
 def render(template, payload, request):
-    return render_to_response(request, template, payload)
+	if request.facebook_message is not None:
+		facebook_message = request.facebook_message
+	else:
+		facebook_message = ''
+	return render_to_response(request, template, payload)
 
 def register(request, page):
 	payload = {}
@@ -387,6 +396,45 @@ def editdetails(request):
 
 @login_required		
 def logout_view(request):
-	logout(request)							
+	logout(request)			
+	FacebookConnectMiddleware.delete_fb_cookies = True
 	return HttpResponseRedirect('/') 
 	
+@staff_only
+def send_connect_users(request):
+	payload = {}
+	users = User.all().filter('email_hash = ', None).fetch(100)
+	hashes = []
+	fb = Facebook(settings.FACEBOOK_API_KEY, settings.FACEBOOK_API_SECRET)
+	for user in users:
+		#logging.debug(user)
+		user.email_hash = fb.hash_email(user.email)
+		hashes.append({"email_hash": user.email_hash})
+		user.put()
+	user_info_response = fb.connect.registerUsers(hashes)
+	return render("standardpage.html", payload, request)
+
+
+def connect_users(request):
+	#<QueryDict: {u'fb_sig_time': [u'1230351016.3299'], 
+	#			u'fb_sig_authorize': [u'1'], 
+	#			u'fb_sig_locale': [u'en_US'], 
+	#			u'fb_sig_session_key': [u'2.oYf3yaL9PnROgLyp5cBg9A__.86400.1230440400-1144902201'], 
+	#			u'fb_sig_in_new_facebook': [u'1'], 
+	#			u'fb_sig_profile_update_time': [u'0'], 
+	#			u'fb_sig_user': [u'1144902201'], 
+	#			u'fb_sig_expires': [u'1230440400'], 
+	#			u'fb_sig': [u'807f94cba0b3a26f359cd5a7c16cdcd6'], 
+	#			u'fb_sig_api_key': [u'9669d802ca3cdcc15172ccd7b4636646'], 
+	#			u'fb_sig_added': [u'1']}>
+	payload = {}
+	logging.info(request.POST)
+	fb = Facebook(settings.FACEBOOK_API_KEY, settings.FACEBOOK_API_SECRET)
+	fb.session_key = request.POST['fb_sig_session_key']
+	user_info_response = fb.users.getInfo([request.POST['fb_sig_user']], ['email_hashes', 'first_name', 'last_name'])
+	logging.info(user_info_response)
+	for hash in user_info_response[0]['email_hashes']:
+		user = User.all().filter('email_hash = ', hash).get()
+		user.facebook_id = int(request.POST['fb_sig_user'])
+		user.put()
+	return render("standardpage.html", payload, request)
