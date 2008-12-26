@@ -25,6 +25,9 @@ from util.BeautifulSoup import BeautifulSoup
 
 import urlparse
 
+
+from connect.FacebookConnectMiddleware import FacebookConnectMiddleware
+
 class UserField(forms.CharField):
 	def clean(self, value):
 		super(UserField, self).clean(value)
@@ -66,7 +69,11 @@ class EditDetailsForm(forms.Form):
 
 
 def render(template, payload, request):
-    return render_to_response(request, template, payload)
+	if request.facebook_message is not None:
+		facebook_message = request.facebook_message
+	else:
+		facebook_message = ''
+	return render_to_response(request, template, payload)
 
 def register(request, page):
 	payload = {}
@@ -387,6 +394,7 @@ def editdetails(request):
 
 @login_required		
 def logout_view(request):
-	logout(request)							
+	logout(request)			
+	FacebookConnectMiddleware.delete_fb_cookies = True
 	return HttpResponseRedirect('/') 
 	
