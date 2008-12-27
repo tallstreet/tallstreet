@@ -88,7 +88,12 @@ def register(request, page):
 					user = User(key_name="user%s" % f.data['username'], username=f.data['username'], email=f.data['email'])
 					user.set_password(f.data['password'])
 					user.is_active = True
+					fb = Facebook(settings.FACEBOOK_API_KEY, settings.FACEBOOK_API_SECRET)
+					user.email_hash = fb.hash_email(user.email)
+					hashes = []
+					hashes.append({"email_hash": user.email_hash})			
 					user.put()
+					user_info_response = fb.connect.registerUsers(hashes)
 					#automatically login
 					user = authenticate(username=f.data['username'],password=f.data['password'])
 					if user is not None:
