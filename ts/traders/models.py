@@ -52,3 +52,6 @@ class TallstreetTransaction(db.Model):
 		query.filter('url =', url)
 		return query.fetch(50)	
 		
+
+class Log(db.Model):
+	description = db.StringProperty()
