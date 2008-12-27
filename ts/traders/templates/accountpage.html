@@ -1,6 +1,4 @@
 {% extends "base.html" %}
-{% block javascript %}<script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
-{% endblock %}
 {% block content %}
 	 <div id="sidebar">
 	 <ul class="menu">
@@ -10,15 +8,9 @@
           <li class="leaf"><a href="/account/transactions.html">Transactions</a></li>
           <li class="leaf"><a href="/promote.html">Promote your site</a></li>
           <li class="leaf"><a href="/account/editdetails.html">Edit Details</a></li>
-          <li class="leaf"><a href="#" onclick='FB.Connect.logoutAndRedirect("/account/logout.html")'>Logout</a></li>
+          <li class="leaf"><a href="/account/logout.html">Logout</a></li>
 	 </ul>
        </div>
-<script type="text/javascript">
-    FB_RequireFeatures(["XFBML"], function()
-    {
-      FB.Facebook.init("9669d802ca3cdcc15172ccd7b4636646", "/xd_receiver.htm");
-    });
-</script>       
  	 <div id="maincontents">
 {% block text %}{% endblock %}
 	 </div>

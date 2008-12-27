@@ -1,5 +1,5 @@
-application: tallstreet
-version: 6
+application: ts
+version: 5
 runtime: python
 api_version: 1
 default_expiration: "90d"
@@ -31,10 +31,6 @@ handlers:
 - url: /robots.txt
   static_files: media/static/robots.txt
   upload: media/static/robots.txt
-
-- url: /xd_receiver.htm
-  static_files: media/static/xd_receiver.htm
-  upload: media/static/xd_receiver.htm
 
 - url: /load
   script: load/loader.py

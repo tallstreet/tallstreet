@@ -1,11 +1,9 @@
 {% extends "standardpage.html" %}
-{% block javascript %}<script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
-{% endblock %}
 {% block title %} - Login{% endblock %}
 {% block text %}
   <form name="login" method="post" action="login.html" class="login-form"><fieldset>
     <legend>Already a member? <span>(Sign In)</span></legend>
-	<table border=0 width=100%>
+	<table border=0>
 	{% if form.errors %}
     <tr>
       <td colspan=2 class="errorlist">Your username and password didn't match. Please try again.</td>
@@ -28,22 +26,9 @@
     <tr>
       <td colspan=2 align="center"><a href=passwordforgotten.html>Forgotten your password?</a></td>
     </tr>
-
 	</table>
   </fieldset>
-  <p align="center">or</p>
-  <fieldset>
-	<p align="center"><fb:login-button></fb:login-button></p>
-  </fieldset>
   </form>
-
-<script type="text/javascript">
-    FB_RequireFeatures(["XFBML"], function()
-    {
-
-      FB.Facebook.init("9669d802ca3cdcc15172ccd7b4636646", "/xd_receiver.htm", {"ifUserConnected":"account/"});
-    });
-</script>
 
   <table border="0" cellpadding="10">
     <tr>

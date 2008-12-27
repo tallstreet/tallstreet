@@ -2,6 +2,3 @@
 *.pyc
 *.ini
 settings.py
-.project
-.settings
-.pydevproject
