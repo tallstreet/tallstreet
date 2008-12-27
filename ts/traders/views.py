@@ -408,15 +408,20 @@ def logout_view(request):
 @staff_only
 def send_connect_users(request):
 	payload = {}
-	users = User.all().filter('email_hash = ', None).fetch(100)
+	users = User.all().filter('username > ', request.GET['name']).fetch(100)
 	hashes = []
 	fb = Facebook(settings.FACEBOOK_API_KEY, settings.FACEBOOK_API_SECRET)
 	for user in users:
 		#logging.debug(user)
 		user.email_hash = fb.hash_email(user.email)
 		hashes.append({"email_hash": user.email_hash})
+		username = user.username
 		user.put()
+	logging.info(hashes)
+	logging.info(username)
 	user_info_response = fb.connect.registerUsers(hashes)
+	logging.info(user_info_response)
+	payload['text'] = "<a href='/send_connect?name=%s'>%s</a>" % (username, username)
 	return render("standardpage.html", payload, request)
 
 
