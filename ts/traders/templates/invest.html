@@ -2,13 +2,12 @@
 {% load currency %}
 {% block title %} - Invest in {{ title }}{% endblock %}
 {% block javascript %}
-<script type="text/javascript" src="/media/js/AJAX.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
 <script type="text/javascript" src="/media/js/add.js"></script>
 <script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
 {% endblock %}
 {% block text %}
-	    <form name="invest" method="post" action="" 
-	    class="form"  style="width: 500px;"><fieldset>
+	    <form id="invest" name="invest" method="post" action="" class="form"  style="width: 500px;"><fieldset>
 
 		<legend>Invest In {{ title|truncatewords:3 }}</legend>
 	    <table width="100%">
@@ -72,10 +71,10 @@
 		  <tbody>
 {% for keyword in keywords %}
 	      <tr  id="row{{ forloop.counter0 }}"{% ifequal errorrow forloop.counter0 %} class="highlight"{% endifequal %}>
-	        <td align="right"><input type="text" size="10" name="investment[{{ forloop.counter0 }}]" value="{{ keyword.amount }}" onkeyup="update_balance({{ forloop.counter0 }});"></td>
+	        <td align="right"><input type="text" size="10" name="investment[{{ forloop.counter0 }}]" value="{{ keyword.amount }}"></td>
 		<input type="hidden" name="edit[{{ forloop.counter0 }}]" value="{{ keyword.edit }}">
 {%if keyword.edit %}
-	        <td align="left"><input type="text" size="32" maxlength="32" name="keyword[{{ forloop.counter0 }}]" value="{{ keyword.keyword }}" onkeyup="update_keyword({{ forloop.counter0 }});"></td>
+	        <td align="left"><input type="text" size="32" maxlength="32" name="keyword[{{ forloop.counter0 }}]" value="{{ keyword.keyword }}"></td>
 		<td align="left" id="keywordlink{{ forloop.counter0 }}">&nbsp;</td>
 {% else %}
  		<td align="left">{{ keyword.keyword }}<input type="hidden" name="keyword[{{ forloop.counter0 }}]" value="{{ keyword.keyword }}"></td>
@@ -94,25 +93,18 @@
 		  var base_balance = {{ base_balance }};
 		  var this_investment = {{ this_investment }};
 		  var total_balance = {{ user.money_outstanding }};
+		  var url = "{{ url }}";
+		  var title = "{{ title }}";
 		  var keywords = new Array();
 {% for keyword, size in tags.items %}
  keywords['{{ keyword }}'] = '\n &nbsp;<a href="javascript:addRow(\'{{ keyword }}\')" style="font-size: {{ size }}px;">{{ keyword }}</a>&nbsp; ';
 {% endfor %}
 		print_keywords();
-
-		var keyword = document.invest.elements['keyword[' + i + ']'].value;
-		var money = document.invest.elements['investment[' + i + ']'].value;		
-
-		var load_feed = function() {
-			var comment_data = {"money": money, "site": "<a href={{ url }}>{{ title }}</a>", "link":"{{ url }}", "tag_raw": keyword, "tag": "<a href=http://www.tallstreet.com/view/" + keyword + ">" + keyword + "</a>"}
-			FB.Connect.showFeedDialog(54707748376, comment_data, null, null, null, FB.RequireConnect.doNotRequire, function() { document.invest.submit(); });
-			return false 
-		};
 		//  End -->
 		</script></p></fieldset></td></tr>
 	    </table>
 		</fieldset>
-	    <p align="center"><input type="hidden" name="url" value="{{ url }}"><input type="button" name="submit_button" value="Submit" onclick="return load_feed()"></p>
+	    <p align="center"><input type="hidden" name="url" value="{{ url }}"><input type="submit" name="submit_button" value="Submit"></p>
 	  </form>
 	 </div>  
 {% endblock %}

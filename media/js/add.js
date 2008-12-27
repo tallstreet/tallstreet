@@ -1,42 +1,30 @@
 
 function addRow(keyword){
-	if (keyword != '' && document.invest.elements['keyword[' + i + ']'].value == ""){
-		document.invest.elements['keyword[' + i + ']'].value = keyword;
+	if (keyword != '' && $("input[name='keyword[" + i + "]']").val() == ""){
+		$("input[name='keyword[" + i + "]']").val(keyword)
 	} else {
+		var newrow = $("#row" + i).clone().insertAfter($("#row" + i))
 		i = i + 1;
-	    var tbody = document.getElementById('keywords').getElementsByTagName("TBODY")[1];
-	    var row = document.createElement("TR");
-		row.setAttribute('id','row' + i); 
-	    var td1 = document.createElement("TD");
-		td1.setAttribute('align','right'); 
-	    td1.innerHTML = '<input type="text" size="10" name="investment[' + i + ']" value="0" onkeyup="update_balance();">';
-	    var td2 = document.createElement("TD");
-		td2.setAttribute('align','left'); 
-		td2.innerHTML = '<input type="text" size="32" maxlength="32" name="keyword[' + i + ']" value="' + keyword + '" onkeyup="update_keyword(' + i + ');">';
-	    var td3 = document.createElement("TD");
-		td3.setAttribute('align','left'); 
-		td3.setAttribute('id','keywordlink' + i); 
-		td3.innerHTML = '';
-	    row.appendChild(td1);
-	    row.appendChild(td2);
-	    row.appendChild(td3);
-	    tbody.appendChild(row);
-    }
-    keywords[keyword] = '';
-    print_keywords();
-	update_keyword(i);
+		newrow.attr("id", "row" + i)
+		$("#row" + i + " input[name='keyword[" + (i-1) + "]']").attr({name: "keyword[" + i + "]"}).val(keyword).keyup(function() {update_keyword(this)})
+		$("#row" + i + " input[name='investment[" + (i-1) + "]']").attr({name: "investment[" + i + "]"}).val(0).keyup(function() {update_balance(this)})
+		$("#row" + i + " input[name='edit[" + (i-1) + "]']").attr("name", "edit[" + i + "]").val(true)
+		$("#row" + i + " #keywordlink" + (i-1)).attr("id", "keywordlink" + i).html('')
+	}
+	keywords[keyword] = '';
+	print_keywords();
+	update_keyword($("input[name='keyword[" + i + "]']")[0]);
 }
 
 
 function print_keywords(){
-	var dstDiv = document.getElementById('TagCloud');
-	dstDiv.innerHTML = '';
+	var dstDiv = $('#TagCloud').empty()
 	for (tag in keywords) {
 		if (typeof keywords[tag] != 'function'){
-			dstDiv.innerHTML += keywords[tag];
+			dstDiv.append(keywords[tag])
 		}
 	}	
-	dstDiv.innerHTML += ' &nbsp;<a href="javascript:addRow(\'\')" style="font-size: 10px; color: blue;">New Keyword</a>&nbsp;';
+	dstDiv.append(' &nbsp;<a href="javascript:addRow(\'\')" style="font-size: 10px; color: blue;">New Keyword</a>&nbsp;')
 }
 
 function formatCurrency(num) {
@@ -55,92 +43,108 @@ function formatCurrency(num) {
 	return (((sign)?'':'-') + String.fromCharCode(162) + num);
 }
 
-function update_balance(num){
+function update_balance(balance_ele){
 
-	keyword = document.invest.elements['keyword[' + num + ']'].value;
-	money = document.invest.elements['investment[' + num + ']'].value;
-	var errorDiv = document.getElementById('error');
-	errorDiv.innerHTML = "";
+	var num = balance_ele.name.replace("investment[", "").replace("]", "")
+	var keyword = $("input[name='keyword[" + num + "]']").val();
+	var money = balance_ele.value
+	$.lastupdated.keyword = keyword
+	$.lastupdated.money = money
+	$('#error').html('')
 	
-	var dstDiv = document.getElementById('balance');
-	dstDiv.innerHTML = '';
 	var balance = total_balance;
 	balance += this_investment;
 	
 	for(j=0; j<=i; j++)
 	{
-		if (document.invest.elements['investment[' + j + ']'].value == "")
+		if ($("input[name='investment[" + j + "]']").val() == "")
 			continue;
 			
 		var value = parseInt(document.invest.elements['investment[' + j + ']'].value);
 		
-		if (isNaN(value)){
-			var errorDiv = document.getElementById('error');
-			errorDiv.innerHTML = "You must enter a positive integer amount";
-			replaceDivClass('highlight', 'row' + j);			
+		if (isNaN(value) || value < 0){
+			$('#error').html('You must enter a positive integer amount')
+			$('#row' + j).addClass('highlight')		
 		} else {
-			replaceDivClass('', 'row' + j);			
+			$('#row' + j).removeClass('highlight')
 		}
 			
 		balance -= value;
 	}	
 	
 	if (balance < 0)
-		dstDiv.innerHTML = '<font color="red">' + formatCurrency(balance) + '</font>';
+		$('#balance').html('<font color="red">' + formatCurrency(balance) + '</font>')
 	else
-		dstDiv.innerHTML = formatCurrency(balance);
+		$('#balance').html(formatCurrency(balance))
 		
 }
 
 
-function update_keyword(num){
-
-	keyword = document.invest.elements['keyword[' + num + ']'].value;
+function update_keyword(keyword_ele){
+	var num = keyword_ele.name.replace("keyword[", "").replace("]", "")
+	var keyword = keyword_ele.value;
+	var money = $("input[name='investment[" + num + "]']").val();
+	$.lastupdated.keyword = keyword
+	$.lastupdated.money = money
 	if (keyword == ""){
 		return;
 	}
 	
 	if (keyword.indexOf(",") != -1){
-		var errorDiv = document.getElementById('error');
-		errorDiv.innerHTML = "You should sperate new keywords onto a new line";
-		replaceDivClass('highlight', 'row' + num);	
+		$('#error').html("You should sperate new keywords onto a new line")
+		$('#row' + num).addClass('highlight')
 
 		var new_keyword = keyword.substring(keyword.indexOf(",") + 1, keyword.length);		
 		
 		if (new_keyword != "")
-			errorDiv.innerHTML += ". Click <a href='javascript: fix_keyword(" + num + ")'>here</a> to seperate " + new_keyword + " onto a new line";
+			$('#error').append(". Click <a href='javascript: fix_keyword(" + num + ")'>here</a> to seperate " + new_keyword + " onto a new line");
 	} else {
-
-		var errorDiv = document.getElementById('error');
-		errorDiv.innerHTML = "";
-		replaceDivClass('', 'row' + num);		
+		$('#error').html('')
+		$('#row' + num).removeClass('highlight')
 		
 	}
 	
-	var dstDiv = document.getElementById('keywordlink' + num);
-	dstDiv.innerHTML = '<a href="/view/' + keyword.replace(/ /g, '_') + '/" target=_blank>' + keyword + '</a>';	
-	
-	
-		
+	$('#keywordlink' + num).html('<a href="/view/' + keyword.replace(/ /g, '_') + '/" target=_blank>' + keyword + '</a>')
+
 }
 
 
 function fix_keyword(num){
-
-	
-	var keyword = document.invest.elements['keyword[' + num + ']'].value;
+	var keyword = $("input[name='keyword[" + num + "]']").val();
 	
 	if (keyword.indexOf(",") != -1){
-		var dstDiv = document.getElementById('error');
-		dstDiv.innerHTML = "";
-		replaceDivClass('', 'row' + num);	
+		$('#error').html('')
+		$('#row' + num).removeClass('highlight')
 
 		var new_keyword = keyword.substring(keyword.indexOf(",") + 1, keyword.length);		
-		var old_keyword = keyword.substring(0, keyword.indexOf(","));		
-		document.invest.elements['keyword[' + num + ']'].value = old_keyword.replace(/^\s*|\s*$/g,"");
+		var old_keyword = keyword.substring(0, keyword.indexOf(","));
+		$("input[name='keyword[" + num + "]']").val(old_keyword.replace(/^\s*|\s*$/g,""))
 		addRow(new_keyword.replace(/^\s*|\s*$/g,""));
 	}
-	update_keyword(num);
+	update_keyword($("input[name='keyword[" + num + "]']")[0]);
 	
 }
+
+$(document).ready(function() {
+	$.lastupdated = {
+		keyword : $("input[name='keyword[" + i + "]']").val(),
+		money : $("input[name='investment[" + i + "]']").val()
+	}
+	
+	$("input[name*='keyword']").keyup(function() {update_keyword(this)})
+	$("input[name*='investment']").keyup(function() {update_balance(this)})
+	FB_RequireFeatures(["XFBML"], function()
+	{
+			FB.Facebook.init("9669d802ca3cdcc15172ccd7b4636646", "/xd_receiver.htm");
+	});
+
+	FB.Connect.get_status().waitForValue(1, function() {
+		$("#invest").submit(function() {
+			var comment_data = {"money": $.lastupdated.money, "site": "<a href=" + url + ">" +  title + "</a>", "link":url, "tag_raw": $.lastupdated.keyword, "tag": "<a href=http://www.tallstreet.com/view/" + $.lastupdated.keyword + ">" + $.lastupdated.keyword + "</a>"}
+			FB.Connect.showFeedDialog(54707748376, comment_data, null, null, null, FB.RequireConnect.doNotRequire, function() { $("#invest").unbind("submit").submit() });
+			//FB.Connect.showFeedDialog(54707748376, comment_data, null, null, null, FB.RequireConnect.require);
+			return false
+		});	
+	})
+});
 
