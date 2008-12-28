@@ -130,6 +130,7 @@ def account(request):
 @login_required
 def transactions(request):
 	payload = {}
+	payload['transactions'] =  TallstreetTransaction.all().ancestor(request.user).order('-time').fetch(100)
 	return render("transactions.html", payload, request)
 
 @login_required

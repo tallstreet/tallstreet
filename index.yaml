@@ -17,6 +17,13 @@ indexes:
   - name: keyword
   - name: time
 
+# Used 2 times in query history.
+- kind: TallstreetTransaction
+  ancestor: yes
+  properties:
+  - name: time
+    direction: desc
+
 # Unused in query history -- copied from input.
 - kind: TallstreetUniverse
   properties:

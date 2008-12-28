@@ -8,7 +8,7 @@
 	 <thead>
 	 <tr><td>Date</td><td>Description</td><td>Amount</td><td>Balance</td></tr></thead><tbody>
 
-{% for transaction in user.transactions %}
+{% for transaction in transactions %}
 	      <tr class="smalltext">
 	        <td align="left">{{ transaction.time|date:"d M Y" }}</td>
 	        <td align="left">{{ transaction.description|transactiondescription|safe }}</td>
