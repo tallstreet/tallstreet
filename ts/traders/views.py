@@ -136,6 +136,16 @@ def transactions(request):
 @login_required
 def portfolio(request, category):
 	payload = {}
+	results = TallstreetPortfolio.all().ancestor(request.user).order('url').fetch(1000)
+	payload["results"] = []
+	for result in results:
+		result.urlkey = result._url.id_or_name()
+		try:
+			url = result.url
+		except:
+			logging.error("No url" )
+			continue	
+		payload["results"].append(result)
 	return render("portfolio.html", payload, request)
 
 @login_required

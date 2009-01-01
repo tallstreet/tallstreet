@@ -1,24 +1,30 @@
 {% extends "accounthome.html" %}
+{% load htmlfilter %}
 {% load currency %}
 {% load transactiondescription %}
-{% block title %} - Portfolio{% endblock %}
+{% load cache %}
 {% block text %}
-  <div class="form" style="width: 550px;"><fieldset>
-     <legend>Portfolio</legend><table width="100%">
-	 <thead>
-	 <tr><td>Url</td><td>Keyword</td><td>Money</td><td>Edit</td></tr></thead><tbody>
-
-{% for portfolio in user.portfolio %}
-	      <tr class="smalltext">
-	        <td align="left"><a href="{{ portfolio.url.url }}" target=_blank>{{ portfolio.url.title }}</a></td>
-	        <td align="left"><a href="{{ portfolio.keyword.tag|tallstreetlink }}" target=_blank>{{ portfolio.keyword.tag }}</a></td>
-	        <td align="left">{{ portfolio.money|currency }}</td>
-	        <td align="left"><a href="{{ portfolio.url.url|tallstreetinvestlink }}">Edit</a></td>
-	      </tr>
+<h2>Portfolio</h2>
+  <div class="results">
+{% for result in results %}
+	<div class="result">
+	<ul class="money">  	
+	{{ result.history|display_history|safe }}
+		<li class="moneyli">¢{{ result.money|currency }} - <a href="/invest/{{ result.url.url }}">Buy / Sell</a>
+	</ul>  
+	<div class="details"> 	  
+	<h3><a href="{{ result.url.url }}">{{ result.url.title|santize_html|truncatewords:"10" }}</a> - <a target="_blank" href="{{ result.url.url }}"><img src="/images/nw.gif" alt="New Window"></a></h3>
+	<p>{{ result.url.description|truncatewords:"20"|santize_html }}</p>
+	<p class="link">{{ result.url.url }} <a href="/url/{{ result.url.url|urlencode }}"><img src="/images/info.gif" alt="Information {{ result.url.title }}"></a></p>
+<div class="othertags">Tags: 
+	<a href="{{ result.keyword.tag|tallstreetlink }}">{{ result.keyword.tag }}</a>
+{% for keyword in result.keywords %}
+	<a href="{{ keyword.tag.tag|tallstreetlink }}">{{ keyword.tag.tag }}</a>
 {% endfor %}
-       </tbody>
-     </table> 
- </fieldset>
+</div>      
+    </div>
+    </div>
+{% endfor %}
 
-  </div>              
+  </div>
 {% endblock %}

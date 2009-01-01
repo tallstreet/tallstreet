@@ -17,7 +17,13 @@ indexes:
   - name: keyword
   - name: time
 
-# Used 2 times in query history.
+# Used 22 times in query history.
+- kind: TallstreetPortfolio
+  ancestor: yes
+  properties:
+  - name: url
+
+# Used 3 times in query history.
 - kind: TallstreetTransaction
   ancestor: yes
   properties:
