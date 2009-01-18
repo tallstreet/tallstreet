@@ -1,11 +1,13 @@
 application: ts
-version: 8
+version: 10
 runtime: python
 api_version: 1
-default_expiration: "90d"
-
+default_expiration: '3650d'
 
 handlers:
+- url: /media/admin_media
+  static_dir: common/django_aep_export/admin_media/media
+
 - url: /media
   static_dir: media
 
@@ -23,7 +25,10 @@ handlers:
 
 - url: /static
   static_dir: media/static
-
+  
+- url: /css
+  static_dir: media/css
+  
 - url: /favicon.ico
   static_files: media/static/favicon.ico
   upload: media/static/favicon.ico
@@ -35,6 +40,10 @@ handlers:
 - url: /xd_receiver.htm
   static_files: media/static/xd_receiver.htm
   upload: media/static/xd_receiver.htm
+  
+- url: /google917f051914d07e64.html
+  static_files: media/static/xd_receiver.htm
+  upload: media/static/xd_receiver.htm
 
 - url: /load
   script: load/loader.py
@@ -42,3 +51,4 @@ handlers:
 
 - url: /.*
   script: common/appenginepatch/main.py
+  

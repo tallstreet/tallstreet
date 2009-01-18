@@ -13,7 +13,7 @@ from django.utils import simplejson
 from google.appengine.api import urlfetch
 import logging
 
-HEADERS = {"User-Agent": simplejson.load(open("config.json", "r"))["agent"]}
+HEADERS = {"User-Agent": "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1) Gecko/20061010 Firefox/2.0"}
 
 def download(url):
 	result = urlfetch.fetch(url, headers  = HEADERS)

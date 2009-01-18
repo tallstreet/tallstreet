@@ -11,19 +11,33 @@ indexes:
 # your application using appcfg.py.
 
 # Unused in query history -- copied from input.
+- kind: LogEntry
+  properties:
+  - name: content_type
+  - name: object_id
+  - name: action_time
+
+# Unused in query history -- copied from input.
+- kind: LogEntry
+  properties:
+  - name: user
+  - name: action_time
+    direction: desc
+
+# Unused in query history -- copied from input.
 - kind: TallstreetClick
   properties:
   - name: url
   - name: keyword
   - name: time
 
-# Used 22 times in query history.
+# Unused in query history -- copied from input.
 - kind: TallstreetPortfolio
   ancestor: yes
   properties:
   - name: url
 
-# Used 3 times in query history.
+# Unused in query history -- copied from input.
 - kind: TallstreetTransaction
   ancestor: yes
   properties:

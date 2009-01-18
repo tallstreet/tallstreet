@@ -22,7 +22,16 @@ from yos.crawl import rest
 from yos.crawl import xml2dict
 from google.appengine.api import memcache
 
-CONFIG = simplejson.load(open("config.json", "r"))
+CONFIG = {"appid": "V1IoiCfV34Hb7uyGlM4dbNGnrlxjj0uP91_TA6uKSgGNki4kf5A244zyZWaYyQc01.c-",
+ "email": "garfunckle1@yahoo.com",
+ "org": "",
+ "agent": "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1) Gecko/20061010 Firefox/2.0",
+ "commercial": False,
+ "purpose": "Demonstrate the power of Y! Search BOSS",
+ "version": "1.0",
+ "uri": "http://boss.yahooapis.com/ysearch/"
+}
+
 SEARCH_API_URL = CONFIG["uri"].rstrip("/") + "/%s/v%d/%s?start=%d&count=%d&lang=%s&region=%s&filter=%s" + "&appid=" + CONFIG["appid"]
 SUGGEST_API_URL = "http://search.yahooapis.com/WebSearchService/V1/relatedSuggestion?output=json&query=%s&appid=" + CONFIG["appid"]
 GLUE_API_URL = glueurl = "http://glue.yahoo.com/template/index.php?query=%s"

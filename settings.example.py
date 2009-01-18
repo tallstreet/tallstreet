@@ -75,6 +75,12 @@ TEMPLATE_DIRS = (
 
 CACHE_BACKEND = 'memcached://?timeout=0'
 
+DJANGO_STYLE_MODEL_KIND = False
+
+
+FACEBOOK_API_KEY = ''
+FACEBOOK_API_SECRET = ''
+
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '123'
 RECAPTCHA_PUB_KEY = "123"

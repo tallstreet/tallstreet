@@ -14,6 +14,10 @@ class User(EmailUser):
 	facebook_id = db.IntegerProperty()
 	email_hash = db.StringProperty()
 	
+	first_name = db.StringProperty()
+	last_name = db.StringProperty()
+
+	
 	@classmethod
 	def need_new_money(self):
 		query = db.Query(User)
