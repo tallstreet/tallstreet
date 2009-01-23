@@ -2,3 +2,5 @@ appenginepatch
 django
 .google_appengine
 django.zip
+django_aep_export
+zip-packages
