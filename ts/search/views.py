@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect, HttpResponseNotFound
 from ragendja.template import render_to_response
 from ts.search.models import TallstreetUniverse, TallstreetClick, TallstreetUrls, TallstreetTags
 from ts.traders.models import TallstreetPortfolio
@@ -79,7 +79,16 @@ def get_local_results(offset, size, category, user):
 				url = result.url
 		except:
 			logging.error("No url" )
-			continue	
+			continue
+		i = 0	
+		related_keywords_display = []
+		for related_keywords in result.url.related_keywords:
+			if i > 5:
+				break
+			i += 1
+			related_keywords_display.append(related_keywords)
+			
+		result.url.related_keywords_display = related_keywords_display
 		if user and user.is_authenticated():
 			portfolio = TallstreetPortfolio.get_invested(user, result._url, category)
 			if portfolio:
@@ -128,6 +137,8 @@ def rating(request):
 def url(request, url):
 	payload = {}
 	payload["url"] = TallstreetUrls.get_url(url)
+	if not payload["url"]:
+		return HttpResponseNotFound('<h1>Url not added</h1><p>Click <a href="http://www.tallstreet.com/invest/%s">http://www.tallstreet.com/invest/%s</a> to add it.' % (url, url)) 
 	payload["otherurls"] = payload["url"].get_other_urls()		
 	return render(request, 'url.html', payload)
 

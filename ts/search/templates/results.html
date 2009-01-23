@@ -115,7 +115,7 @@ google_color_url = "333333";
 {% if result.url.related_keywords %}
 {% if result.url.related_keywords|length_is:"1" %}{% else %}
 <div class="othertags">Other tags: 
-{% for keyword in result.url.related_keywords %}
+{% for keyword in result.url.related_keywords_display %}
 {% ifnotequal keyword.tag.tag search %}
 	<a href="{{ keyword.tag.tag|tallstreetlink }}">{{ keyword.tag.tag }}</a>
 {% endifnotequal %}
