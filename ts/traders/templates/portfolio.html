@@ -8,7 +8,7 @@
   <div class="results">
 {% for result in results %}
 	<div class="result">
-	<ul class="money">  	
+	<ul class="moneyportfolio">  	
 	{{ result.history|display_history|safe }}
 		<li class="moneyli">¢{{ result.money|currency }} - <a href="/invest/{{ result.url.url }}">Buy / Sell</a>
 	</ul>  

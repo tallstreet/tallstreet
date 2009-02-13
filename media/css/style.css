@@ -349,6 +349,19 @@ fieldset fieldset input {
 	font-size: 10px;
 }
 
+.moneyportfolio {
+	float: left;
+	width: 130px;
+	height: 100%;
+	text-align: center;
+	font-size: 85%;
+	margin: 5px 0px 0px 0px;
+	padding: 0;
+	list-style: none;
+	top: 0;
+	left: 0;
+}
+
 .money {
 	float: left;
 	width: 130px;
@@ -358,6 +371,7 @@ fieldset fieldset input {
 	margin: 5px 0px 0px 0px;
 	padding: 0;
 	list-style: none;
+	clear: left;
 	top: 0;
 	left: 0;
 }
