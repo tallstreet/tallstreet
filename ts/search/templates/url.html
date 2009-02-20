@@ -1,4 +1,6 @@
 {% extends "standardpage.html" %}
+{% block javascript %}<script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
+{% endblock %}
 {% block title %} - {{ title }}{% endblock %}
 {% block text %}
 <h2> {{ url.title }}</h2>
@@ -39,5 +41,13 @@ Other pages from this site
 {% endfor %}	
   </tbody>
 </table></div></p>
+<fb:comments></fb:comments>
+<script type="text/javascript">
+    FB_RequireFeatures(["XFBML"], function()
+    {
+
+      FB.Facebook.init("9669d802ca3cdcc15172ccd7b4636646", "/xd_receiver.htm");
+    });
+</script>
 {% endif %}
 {% endblock %}
