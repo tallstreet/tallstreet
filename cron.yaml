@@ -1,0 +1,9 @@
+cron:
+- description: compileclicks
+  url: /feed/calchistory
+  schedule: every 1 minutes
+- description: calcportfolio
+  url: /feed/calcportfolio
+  schedule: every 24 hours
+
+

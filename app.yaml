@@ -1,5 +1,5 @@
 application: ts
-version: 9 
+version: 11
 runtime: python
 api_version: 1
 default_expiration: '3650d'
@@ -49,6 +49,14 @@ handlers:
   script: load/loader.py
   login: admin
 
+- url: /feeds/calcportfolio
+  script: common/appenginepatch/main.py
+  login: admin
+  
+- url: /feeds/calchistory
+  script: common/appenginepatch/main.py
+  login: admin
+    
 - url: /.*
   script: common/appenginepatch/main.py
   

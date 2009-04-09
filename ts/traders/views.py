@@ -345,8 +345,8 @@ def update_portfolio_gain(user, url, keyword, gain):
 @transaction
 def update_new_money(user):
 	if user.money_outstanding < 1000:
-		user.money += 100
-		user.money_outstanding += 100
+		user.money += 1000
+		user.money_outstanding += 1000
 	
 	user.put()
 
