@@ -1,9 +1,6 @@
 cron:
-- description: compileclicks
-  url: /feed/calchistory
-  schedule: every 1 minutes
-- description: calcportfolio
-  url: /feed/calcportfolio
-  schedule: every 24 hours
+- description: updatenewmoney
+  url: /cron/updatenewmoney
+  schedule: every day 02:00
 
 

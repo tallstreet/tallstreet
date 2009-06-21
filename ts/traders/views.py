@@ -4,6 +4,7 @@ from ragendja.template import render_to_response
 from django import forms
 from django.conf import settings
 from django.template import RequestContext
+import datetime
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -16,13 +17,14 @@ from django.contrib.auth.decorators import login_required
 from ragendja.auth.decorators import staff_only
 from ragendja.dbutils import transaction
 
-from ts.search.models import TallstreetUrls, TallstreetUniverse, TallstreetTags
+from ts.search.models import TallstreetUniverse, TallstreetUrls, TallstreetTags, TallstreetHistoryChanges, TallstreetHistory
 from ts.traders.models import TallstreetPortfolio, TallstreetTransaction, Log
 from google.appengine.ext import db
 
 from google.appengine.api.urlfetch import fetch
 import re
 from util.BeautifulSoup import BeautifulSoup
+from google.appengine.api.labs.taskqueue import Task, TaskAlreadyExistsError
 
 import urlparse
 
@@ -341,7 +343,102 @@ def update_portfolio_gain(user, url, keyword, gain):
 	
 	user.put()
 	return change	
+
+def dequeuerating(request):
+	url = TallstreetUrls.get_url(request.POST['url'])
+	if not url:
+		logging.debug("no url %s " % request.POST['url'])
+		return HttpResponse("No Url", mimetype="text/plain")
 	
+	keyword = TallstreetTags.get_by_key_name("tag%s" %request.POST['keyword'].lower())
+	if not keyword:
+		logging.debug("no Keyword")
+		return HttpResponse("No Keyword", mimetype="text/plain")
+	
+	universe = TallstreetUniverse.get_universe(keyword, url)	 
+	if not universe:	
+		logging.debug("no Universe")		
+		return HttpResponse("No Universe", mimetype="text/plain")
+	
+	historychanges = TallstreetHistoryChanges.get_or_insert(key_name="history%s%s" % (keyword.key(), url.key()))
+	ips = historychanges.ips
+		
+	change = 0
+	if request.path == '/queue/click':
+		change = 1
+	elif request.path == '/queue/rating' and request.POST['rating'] == '5':
+		change = 50
+	elif request.path == '/queue/rating' and request.POST['rating'] == '4':
+		change = 20
+	elif request.path == '/queue/rating' and request.POST['rating'] == '3':
+		change = 10
+	elif request.path == '/queue/rating' and request.POST['rating'] == '2':
+		change = 5
+	elif request.path == '/queue/rating' and request.POST['rating'] == '1':
+		change = -20
+
+	date = datetime.datetime(datetime.datetime.today().year, datetime.datetime.today().month, datetime.datetime.today().day)
+	
+
+	if request.POST['ip'] + request.path in ips:
+		return HttpResponse("Already Rated", mimetype="text/plain")
+	ips.append(request.POST['ip'] + request.path)
+
+	historychanges.ips = ips
+	historychanges.change += change
+	historychanges.put()
+	
+	t = Task(url='/queue/calchistory', params={'historychanges': historychanges.key().id_or_name(), 'universe': universe.key().id_or_name()}, name=historychanges.key().id_or_name() + date.strftime('%Y%m%d'), eta=date + datetime.timedelta(days=1))
+	logging.debug(t)
+	try:
+		t.add('historyqueue')
+	except TaskAlreadyExistsError:
+		pass
+	logging.debug("Success")
+	return HttpResponse("Success", mimetype="text/plain")
+	
+def dequeuehistory(request):
+	date = datetime.datetime(datetime.datetime.today().year, datetime.datetime.today().month, datetime.datetime.today().day)
+	
+	historychanges = TallstreetHistoryChanges.get_or_insert(request.POST['historychanges'])
+	history = TallstreetHistory.get_or_insert(request.POST['historychanges'])
+	
+	if not history:
+		historychanges.delete()
+		return HttpResponse("Can't Find History", mimetype="text/plain")
+	if date in history.dates:
+		historychanges.delete()
+		return HttpResponse("Already Done", mimetype="text/plain")
+	
+	universe = TallstreetUniverse.get_by_key_name(request.POST['universe'])
+	history.universe = universe
+	history.changes.insert(0, long(historychanges.change))
+	history.dates.insert(0, date)
+	history.put()
+	
+	logging.debug(history.universe.money)
+	history.universe.money += long(round(history.universe.money * (1.0 * history.changes[0] / 100)))
+	
+	investors = TallstreetPortfolio.get_investors(history.universe.url, history.universe.tag)
+	
+	logging.debug(history.universe.url.url)
+	logging.debug(history.universe.money)
+	history.universe.put()
+	logging.debug(history.changes)
+	for investor in investors:
+		update_portfolio_gain(investor.parent(), history.universe.url, history.universe.tag, history.changes[0])
+		
+	historychanges.delete()
+	
+	logging.debug("Success")
+	return HttpResponse("Success", mimetype="text/plain")
+
+def cronupdate_new_money(request):
+	users =  User.need_new_money()
+	for user in users:
+		update_new_money(user)
+	return HttpResponse("Success", mimetype="text/plain")
+
 @transaction
 def update_new_money(user):
 	if user.money_outstanding < 1000:
@@ -437,17 +534,6 @@ def send_connect_users(request):
 
 
 def connect_users(request):
-	#<QueryDict: {u'fb_sig_time': [u'1230351016.3299'], 
-	#			u'fb_sig_authorize': [u'1'], 
-	#			u'fb_sig_locale': [u'en_US'], 
-	#			u'fb_sig_session_key': [u'2.oYf3yaL9PnROgLyp5cBg9A__.86400.1230440400-1144902201'], 
-	#			u'fb_sig_in_new_facebook': [u'1'], 
-	#			u'fb_sig_profile_update_time': [u'0'], 
-	#			u'fb_sig_user': [u'1144902201'], 
-	#			u'fb_sig_expires': [u'1230440400'], 
-	#			u'fb_sig': [u'807f94cba0b3a26f359cd5a7c16cdcd6'], 
-	#			u'fb_sig_api_key': [u'9669d802ca3cdcc15172ccd7b4636646'], 
-	#			u'fb_sig_added': [u'1']}>
 	payload = {}
 	logging.info(request.POST)
 	fb = Facebook(settings.FACEBOOK_API_KEY, settings.FACEBOOK_API_SECRET)

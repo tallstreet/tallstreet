@@ -31,20 +31,20 @@ indexes:
   - name: keyword
   - name: time
 
-# Unused in query history -- copied from input.
+# Used 5 times in query history.
 - kind: TallstreetPortfolio
   ancestor: yes
   properties:
   - name: url
 
-# Unused in query history -- copied from input.
+# Used 3 times in query history.
 - kind: TallstreetTransaction
   ancestor: yes
   properties:
   - name: time
     direction: desc
 
-# Unused in query history -- copied from input.
+# Used 25 times in query history.
 - kind: TallstreetUniverse
   properties:
   - name: tag

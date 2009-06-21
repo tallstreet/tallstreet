@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect, HttpResponseNotFound
 from ragendja.template import render_to_response
-from ts.search.models import TallstreetUniverse, TallstreetClick, TallstreetUrls, TallstreetTags
+from ts.search.models import TallstreetUniverse, TallstreetUrls, TallstreetTags
 from ts.traders.models import TallstreetPortfolio
 
 from yos.boss.ysearch import search as ysearch
@@ -15,6 +15,7 @@ import tags
 from django.http import HttpRequest, QueryDict
 from django.core.cache import cache
 from django.utils.http import urlquote
+from google.appengine.api.labs.taskqueue import Task
 
 
 def render(request, template, payload):
@@ -102,8 +103,8 @@ def get_boss_results(offset, size, category):
 	
 	ysr = result['ysearchresponse']
 	
+	results = []
 	if ysr.has_key('resultset_web'):
-		results = []
 		i = 0
 		for result in ysr['resultset_web']:
 			i += 1
@@ -125,13 +126,13 @@ def search(request):
 		return HttpResponsePermanentRedirect('/view/' + request.GET['query'].replace(" ", "_") + '/')
 	
 def click(request):
-	c = TallstreetClick(type="C", keyword=request.POST["keywords"], url=request.POST["url_id"], ip=request.META["REMOTE_ADDR"])
-	c.put()
+	t = Task(url='/queue/click', params={'keyword': request.POST["keywords"], 'url': request.POST["url_id"],'ip': request.META["REMOTE_ADDR"]})
+	t.add('processratings')
 	return HttpResponse("", mimetype="text/plain")
 	
 def rating(request):
-	c = TallstreetClick(type="R", keyword=request.POST["keywords"], rating=int(request.POST["rating"]), url=request.POST["url_id"], ip=request.META["REMOTE_ADDR"])
-	c.put()	
+	t = Task(url='/queue/rating', params={'keyword': request.POST["keywords"], 'rating': int(request.POST["rating"]), 'url': request.POST["url_id"],'ip': request.META["REMOTE_ADDR"]})
+	t.add('processratings')
 	return HttpResponse("Thanks for rating", mimetype="text/plain")
 
 def url(request, url):

@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls.defaults import *
 from ragendja.urlsauto import urlpatterns
-from ts.search.feeds import ResultsFeed, HistoryCalcFeed, PortfolioCalcFeed
+from ts.search.feeds import ResultsFeed
 from django.contrib import admin
 
 admin.autodiscover()
 
 
 feeds = {
-	'results': ResultsFeed,
-	'calchistory': HistoryCalcFeed,
-	'calcportfolio': PortfolioCalcFeed
+	'results': ResultsFeed
 }
 
 
@@ -37,6 +35,8 @@ urlpatterns = patterns('',
 	(r'^url/(.*)$', 'ts.search.views.url'),					   
 			
 	(r'^account/', include('ts.traders.urls')),
+	(r'^queue/', include('ts.traders.urls')),
+	(r'^cron/', include('ts.traders.urls')),
 	(r'^invest/?$', 'ts.traders.views.invest_url'),
 	(r'^invest/(.+)$', 'ts.traders.views.invest'),
 	(r'^add/(.+)/?$', 'ts.traders.views.invest_add_url'),

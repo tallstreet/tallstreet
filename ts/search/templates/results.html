@@ -103,7 +103,7 @@ google_color_url = "333333";
 		{{ result.history|display_history|safe }}
   		<li class="moneyli">{% if user.is_authenticated %}¢{{ result.money|currency }} - <a href="/add/{{ search }}?url={{ result.url.url }}">{% if result.money_invested %}Buy / Sell ({{ result.money_invested }}){% else %}Invest{% endif %}</a>{% else %}{{ result.money }}{% endif %}
   		<script language="javascript">
-				drawRating('{{ result.url.url }}', '{{ forloop.counter }}', 0);
+				drawRating('{{ result.url.url }}', 'r1{{ forloop.counter }}', 0);
 		</script>
  	</ul>  
 {% if result.urlkey %}
@@ -138,7 +138,7 @@ google_color_url = "333333";
    	<ul class="money">  	
   		<li class="moneyli">{% if user.is_authenticated %}¢{{ result.money|currency }} - <a href="/add/{{ search }}?url={{ result.url.url }}">{% if result.money_invested %}Buy / Sell ({{ result.money_invested }}){% else %}Invest{% endif %}</a>{% else %}{{ result.money }}{% endif %}
   		<script language="javascript">
-				drawRating('{{ result.url.url }}', '{{ forloop.counter }}', 0);
+				drawRating('{{ result.url.url }}', 'r2{{ forloop.counter }}', 0);
 		</script>
  	</ul>  	
   	<div class="details"> 	  

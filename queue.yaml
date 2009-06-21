@@ -1,0 +1,8 @@
+queue:
+- name: default
+  rate: 1/s
+- name: processratings
+  rate: 1/s
+  bucket_size: 10
+- name: historyqueue
+  rate: 1/s

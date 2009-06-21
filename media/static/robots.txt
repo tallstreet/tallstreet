@@ -1,4 +1,2 @@
 User-agent: *
-Disallow: train.php
-Disallow: register.php
-Disallow: account.php
+Disallow: /rate/

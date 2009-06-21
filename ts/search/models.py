@@ -67,26 +67,9 @@ class TallstreetHistory(db.Model):
 	
 class TallstreetHistoryChanges(db.Model):
 	ips = db.ListProperty(str)	
+	change = db.IntegerProperty(default=0)
 	
 	@classmethod
 	def get_all(self):
 		query = db.Query(TallstreetHistoryChanges)
-		return query.fetch(100)
-			
-	  
-class TallstreetClick(db.Model):
-	type = db.CategoryProperty()
-	ip = db.StringProperty()
-	keyword = db.CategoryProperty()
-	rating = db.RatingProperty()
-	url = db.LinkProperty()
-	time = db.DateTimeProperty(auto_now_add=True)
-	
-
-	@classmethod
-	def get_all(self):
-		query = db.Query(TallstreetClick)
-		query.order("url")
-		query.order("keyword")
-		query.order("time")
 		return query.fetch(100)
